@@ -1,0 +1,10 @@
+{
+  "name": "repoguardian-x",
+  "version": "0.1.0",
+  "description": "Local-first VS Code security extension (scaffold).",
+  "main": "dist/extension.js",
+  "scripts": {
+    "compile": "tsc",
+    "test": "echo 'no tests yet'"
+  }
+}

@@ -1,0 +1,8 @@
+[
+  {"id":"aws-access-key","name":"AWS Access Key ID","severity":"error","pattern":"AKIA[0-9A-Z]{16}","description":"AWS Access Key"},
+  {"id":"aws-secret-key","name":"AWS Secret Key","severity":"error","pattern":"[A-Za-z0-9/+=]{40}","description":"AWS Secret"},
+  {"id":"private-key-pem","name":"Private Key PEM","severity":"error","pattern":"-----BEGIN (RSA )?PRIVATE KEY-----","description":"PEM private key"},
+  {"id":"github-token","name":"GitHub Token","severity":"error","pattern":"ghp_[0-9A-Za-z_]{36}","description":"GitHub PAT"},
+  {"id":"gpl-license","name":"GPL License","severity":"warning","pattern":"GPL","description":"GPL mention"},
+  {"id":"email-address","name":"Email Address","severity":"info","pattern":"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}","description":"Email"}
+]
