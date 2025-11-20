@@ -1,15 +1,52 @@
-﻿{
+{
   "name": "repoguardian-x",
   "version": "0.1.0",
   "description": "Local-first VS Code security extension with GitLab CI automation.",
   "main": "dist/extension.js",
+  "bin": {
+    "repoguardian": "dist/cli.js"
+  },
   "scripts": {
     "compile": "tsc",
     "build": "tsc",
     "lint": "echo \"(TODO) add eslint\" && exit 0",
-    "test": "echo \"(TODO) add jest tests\" && exit 0"
+    "test": "node dist/test/masking.test.js"
   },
   "devDependencies": {
+    "@types/node": "^18.19.130",
+    "@types/vscode": "^1.106.1",
     "typescript": "^5.0.0"
+  },
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "repoguardian.scan",
+        "title": "RepoGuardian: Run Security Scan"
+      },
+      {
+        "command": "repoguardian.installHook",
+        "title": "RepoGuardian: Install Pre-Push Hook"
+      },
+      {
+        "command": "repoguardian.showLastReport",
+        "title": "RepoGuardian: Show Last Report"
+      }
+    ],
+    "configuration": {
+      "title": "RepoGuardian",
+      "properties": {
+        "repoguardian.scanOnSave": {
+          "type": "boolean",
+          "default": false,
+          "description": "Run security scan automatically on file save"
+        }
+      }
+    }
   }
 }
