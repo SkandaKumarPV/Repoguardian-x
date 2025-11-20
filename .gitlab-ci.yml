@@ -1,0 +1,47 @@
+image: node:20
+
+stages:
+  - setup
+  - test
+  - scan
+  - pages
+
+install:
+  stage: setup
+  script:
+    - npm ci || npm install
+  artifacts:
+    paths:
+      - node_modules/
+      - dist/
+    expire_in: 1 week
+
+test:
+  stage: test
+  needs: ["install"]
+  script:
+    - npm run build
+    - npm test
+
+repoguardian_scan:
+  stage: scan
+  needs: ["install"]
+  script:
+    - echo "RepoGuardian CI scanner placeholder"
+  allow_failure: true
+
+pages:
+  stage: pages
+  script:
+    - mkdir -p public
+    - cp -r docs/* public/ || echo "No docs yet"
+  artifacts:
+    paths:
+      - public
+  only:
+    - main
+
+include:
+  - template: Security/SAST.gitlab-ci.yml
+  - template: Security/Secret-Detection.gitlab-ci.yml
+  - template: Security/Dependency-Scanning.gitlab-ci.yml

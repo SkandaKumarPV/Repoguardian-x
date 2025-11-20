@@ -1,10 +1,15 @@
-{
+﻿{
   "name": "repoguardian-x",
   "version": "0.1.0",
-  "description": "Local-first VS Code security extension (scaffold).",
+  "description": "Local-first VS Code security extension with GitLab CI automation.",
   "main": "dist/extension.js",
   "scripts": {
     "compile": "tsc",
-    "test": "echo 'no tests yet'"
+    "build": "tsc",
+    "lint": "echo \"(TODO) add eslint\" && exit 0",
+    "test": "echo \"(TODO) add jest tests\" && exit 0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
   }
 }
