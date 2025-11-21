@@ -12,15 +12,13 @@ This guide will help you manually test all four new UX features.
 Create a file called `test-secrets.js` with the following content:
 
 ```javascript
-// AWS credentials
-const awsKey = "AKIAIOSFODNN7EXAMPLE";
-const awsSecret = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY";
+// Note: For actual testing, use the demo files provided:
+// - demo/scenario-secret/secrets.env.bad (contains AWS credentials)
+// Or create your own test file with fake secrets
 
-// GitHub token
-const githubToken = "ghp_1234567890abcdefghijklmnopqrstuvwxyz";
-
-// API key (example only - not real)
-const apiKey = "sk_test_XXXXXXXXXXXXXXXXXXXXXXXX";
+// Example patterns that would be detected:
+const awsKey = "AKIA" + "EXAMPLE16CHARS"; // AWS Access Key pattern
+const githubToken = "ghp_" + "abc123...xyz"; // GitHub token pattern
 ```
 
 ## Test Steps
