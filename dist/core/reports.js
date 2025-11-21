@@ -44,7 +44,7 @@ const fs = __importStar(require("fs"));
 const path = __importStar(require("path"));
 const REPORTS_DIR = '.repo-guardian';
 const REPORTS_SUBDIR = 'reports';
-const MAX_AGE_DAYS = 7;
+const DEFAULT_MAX_AGE_DAYS = 7;
 /**
  * Get the reports directory path
  */
@@ -130,16 +130,17 @@ function loadLatestReport(workspacePath) {
     }
 }
 /**
- * Delete reports older than MAX_AGE_DAYS
+ * Delete reports older than specified days
  */
-function cleanupOldReports(workspacePath) {
+function cleanupOldReports(workspacePath, maxAgeDays) {
     const reportsDir = getReportsDir(workspacePath);
     try {
         if (!fs.existsSync(reportsDir)) {
             return 0;
         }
         const now = Date.now();
-        const maxAge = MAX_AGE_DAYS * 24 * 60 * 60 * 1000; // Convert days to milliseconds
+        const ageDays = maxAgeDays || DEFAULT_MAX_AGE_DAYS;
+        const maxAge = ageDays * 24 * 60 * 60 * 1000; // Convert days to milliseconds
         const files = fs.readdirSync(reportsDir);
         let deletedCount = 0;
         for (const file of files) {

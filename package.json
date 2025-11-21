@@ -39,6 +39,14 @@
       {
         "command": "repoguardian.showLastReport",
         "title": "RepoGuardian: Show Last Report"
+      },
+      {
+        "command": "repoguardian.fixIssue",
+        "title": "RepoGuardian: Fix Issue with Wizard"
+      },
+      {
+        "command": "repoguardian.openScanSummary",
+        "title": "RepoGuardian: Open Scan Summary"
       }
     ],
     "configuration": {

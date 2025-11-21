@@ -122,7 +122,7 @@ function walkDirectory(dirPath, workspacePath, ignorePatterns) {
  * Scan workspace and return detections
  */
 function scanWorkspace(options) {
-    const { workspacePath, ignorePaths = [] } = options;
+    const { workspacePath, ignorePaths = [], maxFileSize = 1048576 } = options;
     const rules = (0, detector_1.loadRules)();
     const customIgnorePatterns = loadIgnorePatterns(workspacePath);
     const allIgnorePatterns = [...customIgnorePatterns, ...ignorePaths];
@@ -133,6 +133,11 @@ function scanWorkspace(options) {
     let filesScanned = 0;
     for (const filePath of files) {
         try {
+            // Check file size
+            const stats = fs.statSync(filePath);
+            if (stats.size > maxFileSize) {
+                continue; // Skip files larger than maxFileSize
+            }
             const detections = (0, detector_1.scanFile)(filePath, rules);
             if (detections.length > 0) {
                 allDetections.push(...detections);
