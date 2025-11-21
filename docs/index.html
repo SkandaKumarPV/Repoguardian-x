@@ -2,29 +2,287 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>RepoGuardian X Dashboard</title>
   <style>
-    body { font-family: sans-serif; margin: 2rem; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background: #f5f5f5;
+      padding: 2rem;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    h1 {
+      color: #2c3e50;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .subtitle {
+      color: #7f8c8d;
+      margin-bottom: 2rem;
+    }
+    
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+    
+    .stat-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    
+    .stat-card.clean {
+      background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    }
+    
+    .stat-card.warning {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    }
+    
+    .stat-value {
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin: 0.5rem 0;
+    }
+    
+    .stat-label {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+    
+    .findings-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 2rem 0;
+      background: white;
+    }
+    
+    .findings-table th,
+    .findings-table td {
+      padding: 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    
+    .findings-table th {
+      background: #f8f9fa;
+      font-weight: 600;
+      color: #495057;
+    }
+    
+    .findings-table tbody tr:hover {
+      background: #f8f9fa;
+    }
+    
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+    
+    .badge-error { background: #fee; color: #c00; }
+    .badge-warning { background: #ffeaa7; color: #d63031; }
+    .badge-info { background: #e3f2fd; color: #1976d2; }
+    
+    .code {
+      font-family: 'Courier New', monospace;
+      background: #f5f5f5;
+      padding: 0.2rem 0.4rem;
+      border-radius: 3px;
+      font-size: 0.9rem;
+    }
+    
+    .loading {
+      text-align: center;
+      padding: 2rem;
+      color: #7f8c8d;
+    }
+    
+    .error-message {
+      background: #fee;
+      color: #c00;
+      padding: 1rem;
+      border-radius: 4px;
+      margin: 1rem 0;
+    }
+    
+    footer {
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid #e0e0e0;
+      text-align: center;
+      color: #7f8c8d;
+      font-size: 0.9rem;
+    }
+    
+    .timestamp {
+      color: #7f8c8d;
+      font-size: 0.9rem;
+      margin: 1rem 0;
+    }
   </style>
 </head>
 <body>
-  <h1>RepoGuardian X — Project Dashboard</h1>
-  <p>Local-first VS Code security extension with GitLab CI automation.</p>
+  <div class="container">
+    <h1>
+      <span>🛡️</span>
+      <span>RepoGuardian X Dashboard</span>
+    </h1>
+    <p class="subtitle">Local-first security scanning with GitLab CI automation</p>
 
-  <h2>Status</h2>
-  <ul>
-    <li>Extension Scaffold: Complete</li>
-    <li>Detection Rules: Added</li>
-    <li>Masking Spec: Added</li>
-    <li>CI Pipeline: Added</li>
-    <li>Core Logic: Pending</li>
-  </ul>
+    <div id="loading" class="loading">
+      <p>Loading latest scan results...</p>
+    </div>
 
-  <h2>Scans</h2>
-  <p>No CI scan output yet — placeholder for masked results.</p>
+    <div id="dashboard" style="display: none;">
+      <div class="stats-grid">
+        <div class="stat-card" id="totalCard">
+          <div class="stat-label">Total Findings</div>
+          <div class="stat-value" id="totalFindings">0</div>
+        </div>
+        
+        <div class="stat-card warning">
+          <div class="stat-label">🔐 Secrets/Credentials</div>
+          <div class="stat-value" id="secretCount">0</div>
+        </div>
+        
+        <div class="stat-card warning">
+          <div class="stat-label">⚖️ License Issues</div>
+          <div class="stat-value" id="licenseCount">0</div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-label">Files Scanned</div>
+          <div class="stat-value" id="filesScanned">0</div>
+        </div>
+      </div>
 
-  <footer>
-    <p>Setup Completed</p>
-  </footer>
+      <div class="timestamp">
+        <strong>Last Scan:</strong> <span id="lastScanTime">N/A</span>
+      </div>
+
+      <h2>Latest Findings (Masked)</h2>
+      <div id="findingsContainer">
+        <table class="findings-table">
+          <thead>
+            <tr>
+              <th>Severity</th>
+              <th>Rule</th>
+              <th>File</th>
+              <th>Line</th>
+              <th>Masked Snippet</th>
+            </tr>
+          </thead>
+          <tbody id="findingsBody">
+            <!-- Populated by JavaScript -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="error" style="display: none;" class="error-message">
+      <p><strong>Error:</strong> Failed to load scan results.</p>
+      <p>Make sure the CI pipeline has run at least once.</p>
+    </div>
+
+    <footer>
+      <p><strong>RepoGuardian X</strong> - All data is masked. No raw secrets exposed.</p>
+      <p>Reports are local-only and auto-expire after 7 days.</p>
+    </footer>
+  </div>
+
+  <script>
+    async function loadReport() {
+      try {
+        const response = await fetch('data/latest-report.json');
+        if (!response.ok) throw new Error('Report not found');
+        
+        const report = await response.json();
+        
+        // Hide loading
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'block';
+        
+        // Update stats
+        document.getElementById('totalFindings').textContent = report.detectionsFound || 0;
+        document.getElementById('filesScanned').textContent = report.filesScanned || 0;
+        document.getElementById('lastScanTime').textContent = report.timestamp 
+          ? new Date(report.timestamp).toLocaleString() 
+          : 'N/A';
+        
+        // Count by category
+        const detections = report.detections || [];
+        const secretCount = detections.filter(d => d.ruleId && d.ruleId.startsWith('secret-')).length;
+        const licenseCount = detections.filter(d => d.ruleId && d.ruleId.startsWith('license-')).length;
+        
+        document.getElementById('secretCount').textContent = secretCount;
+        document.getElementById('licenseCount').textContent = licenseCount;
+        
+        // Update total card style
+        const totalCard = document.getElementById('totalCard');
+        if (report.detectionsFound === 0) {
+          totalCard.classList.add('clean');
+        } else {
+          totalCard.classList.add('warning');
+        }
+        
+        // Populate findings table
+        const tbody = document.getElementById('findingsBody');
+        if (detections.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #11998e;">✅ No issues detected - repository is clean!</td></tr>';
+        } else {
+          tbody.innerHTML = detections.slice(0, 20).map(d => {
+            const severityBadge = d.severity === 'error' ? 'badge-error' 
+              : d.severity === 'warning' ? 'badge-warning' 
+              : 'badge-info';
+            
+            return `
+              <tr>
+                <td><span class="badge ${severityBadge}">${d.severity || 'info'}</span></td>
+                <td>${d.ruleName || d.ruleId || 'Unknown'}</td>
+                <td><span class="code">${d.filePath || 'N/A'}</span></td>
+                <td>${d.line || '-'}</td>
+                <td><span class="code">${(d.snippet || '').substring(0, 60)}...</span></td>
+              </tr>
+            `;
+          }).join('');
+          
+          if (detections.length > 20) {
+            tbody.innerHTML += `<tr><td colspan="5" style="text-align: center; color: #7f8c8d;">... and ${detections.length - 20} more findings</td></tr>`;
+          }
+        }
+      } catch (error) {
+        console.error('Failed to load report:', error);
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('error').style.display = 'block';
+      }
+    }
+    
+    // Load on page ready
+    loadReport();
+  </script>
 </body>
 </html>

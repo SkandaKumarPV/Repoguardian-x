@@ -1,0 +1,13 @@
+.git
+.gitignore
+.gitlab-ci.yml
+.vscode-test
+.vscode
+node_modules
+src/**/*.ts
+tsconfig.json
+**/.DS_Store
+*.vsix
+.repo-guardian
+demo
+scripts/install-hooks.sh

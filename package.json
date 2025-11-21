@@ -10,7 +10,10 @@
     "compile": "tsc",
     "build": "tsc",
     "lint": "echo \"(TODO) add eslint\" && exit 0",
-    "test": "node dist/test/masking.test.js"
+    "test": "npm run build && node dist/test/masking.test.js && node dist/test/integration.test.js && node dist/test/e2e.test.js",
+    "test:masking": "npm run build && node dist/test/masking.test.js",
+    "test:integration": "npm run build && node dist/test/integration.test.js",
+    "test:e2e": "npm run build && node dist/test/e2e.test.js"
   },
   "devDependencies": {
     "@types/node": "^18.19.130",
@@ -44,7 +47,35 @@
         "repoguardian.scanOnSave": {
           "type": "boolean",
           "default": false,
-          "description": "Run security scan automatically on file save"
+          "description": "Run security scan automatically when saving files"
+        },
+        "repoguardian.maxFileSize": {
+          "type": "number",
+          "default": 1048576,
+          "description": "Maximum file size to scan in bytes (default: 1MB). Files larger than this will be skipped."
+        },
+        "repoguardian.ignorePaths": {
+          "type": "array",
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "description": "Additional paths to ignore during scanning (in addition to .safecommit-ignore). Examples: 'test/**', '*.fixture.js'"
+        },
+        "repoguardian.reportRetentionDays": {
+          "type": "number",
+          "default": 7,
+          "description": "Number of days to retain local scan reports before auto-deletion (default: 7)"
+        },
+        "repoguardian.enableNotifications": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show notifications when scans complete"
+        },
+        "repoguardian.showStatusBar": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show RepoGuardian status in the status bar"
         }
       }
     }

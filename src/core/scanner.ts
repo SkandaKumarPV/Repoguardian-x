@@ -7,6 +7,7 @@ export interface ScanOptions {
   workspacePath: string;
   filePatterns?: string[];
   ignorePaths?: string[];
+  maxFileSize?: number;
 }
 
 export interface ScanReport {
@@ -109,7 +110,7 @@ function walkDirectory(dirPath: string, workspacePath: string, ignorePatterns: s
  * Scan workspace and return detections
  */
 export function scanWorkspace(options: ScanOptions): ScanReport {
-  const { workspacePath, ignorePaths = [] } = options;
+  const { workspacePath, ignorePaths = [], maxFileSize = 1048576 } = options;
   const rules = loadRules();
   const customIgnorePatterns = loadIgnorePatterns(workspacePath);
   const allIgnorePatterns = [...customIgnorePatterns, ...ignorePaths];
@@ -123,6 +124,12 @@ export function scanWorkspace(options: ScanOptions): ScanReport {
   
   for (const filePath of files) {
     try {
+      // Check file size
+      const stats = fs.statSync(filePath);
+      if (stats.size > maxFileSize) {
+        continue; // Skip files larger than maxFileSize
+      }
+      
       const detections = scanFile(filePath, rules);
       if (detections.length > 0) {
         allDetections.push(...detections);

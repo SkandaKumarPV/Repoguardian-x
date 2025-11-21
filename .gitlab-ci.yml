@@ -4,7 +4,9 @@ stages:
   - setup
   - test
   - scan
+  - package
   - pages
+  - release
 
 install:
   stage: setup
@@ -27,19 +29,96 @@ repoguardian_scan:
   stage: scan
   needs: ["install"]
   script:
-    - echo "RepoGuardian CI scanner placeholder"
-  allow_failure: true
+    - npm run build
+    - node dist/cli.js --output repoguardian-report.json || EXIT_CODE=$?
+    - echo "Scan completed with exit code ${EXIT_CODE:-0}"
+    - exit ${EXIT_CODE:-0}
+  artifacts:
+    paths:
+      - repoguardian-report.json
+    when: always
+    expire_in: 30 days
+  allow_failure: false
+
+create_issue:
+  stage: scan
+  needs: ["repoguardian_scan"]
+  when: on_failure
+  script:
+    - chmod +x scripts/create-gitlab-issue.sh
+    - bash scripts/create-gitlab-issue.sh repoguardian-report.json
+
+manage_labels:
+  stage: scan
+  needs: ["repoguardian_scan"]
+  when: always
+  script:
+    - chmod +x scripts/manage-quarantine-label.sh
+    - bash scripts/manage-quarantine-label.sh repoguardian-report.json
+
+package_extension:
+  stage: package
+  needs: ["test"]
+  script:
+    - npm run build
+    - npm install -g @vscode/vsce || npm install -g vsce
+    - vsce package --no-git-tag-version --allow-star-activation
+  artifacts:
+    paths:
+      - "*.vsix"
+    expire_in: 90 days
+  only:
+    - main
+    - tags
 
 pages:
   stage: pages
+  needs: ["repoguardian_scan"]
   script:
     - mkdir -p public
     - cp -r docs/* public/ || echo "No docs yet"
+    - mkdir -p public/data
+    - cp repoguardian-report.json public/data/latest-report.json 2>/dev/null || echo '{"detectionsFound":0,"filesScanned":0,"timestamp":"N/A","detections":[]}' > public/data/latest-report.json
   artifacts:
     paths:
       - public
   only:
     - main
+
+release_job:
+  stage: release
+  needs: ["package_extension"]
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  script:
+    - echo "Creating release for tag ${CI_COMMIT_TAG}"
+  release:
+    tag_name: '${CI_COMMIT_TAG}'
+    description: |
+      ## RepoGuardian X ${CI_COMMIT_TAG}
+      
+      **Local-first security scanning extension for VS Code**
+      
+      ### Installation
+      1. Download the `.vsix` file from the assets below
+      2. Open VS Code
+      3. Run: `Extensions: Install from VSIX...`
+      4. Select the downloaded file
+      
+      ### Features
+      - 🔒 100% offline security scanning
+      - 🎭 Automatic secret masking
+      - 🚫 Pre-push hook protection
+      - 📊 GitLab CI integration
+      - 🔍 VS Code Problems panel integration
+      
+      See README.md for full documentation.
+    assets:
+      links:
+        - name: 'RepoGuardian X Extension (.vsix)'
+          url: '${CI_PROJECT_URL}/-/jobs/${CI_JOB_ID}/artifacts/raw/repoguardian-x-${CI_COMMIT_TAG}.vsix'
+          link_type: 'package'
+  only:
+    - tags
 
 include:
   - template: Security/SAST.gitlab-ci.yml

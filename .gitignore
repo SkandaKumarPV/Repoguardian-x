@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.repo-guardian/
+*.vsix
+.test-temp/
+.test-config/
+*.log
+.DS_Store
+.vscode-test/
+*.tsbuildinfo

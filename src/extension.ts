@@ -18,7 +18,12 @@ export function activate(context: vscode.ExtensionContext) {
   statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100);
   statusBarItem.command = 'repoguardian.scan';
   updateStatusBar('idle');
-  statusBarItem.show();
+  
+  // Show status bar based on config
+  const config = vscode.workspace.getConfiguration('repoguardian');
+  if (config.get('showStatusBar', true)) {
+    statusBarItem.show();
+  }
   context.subscriptions.push(statusBarItem);
 
   // Register commands
@@ -58,7 +63,9 @@ export function activate(context: vscode.ExtensionContext) {
   // Cleanup old reports
   const workspacePath = getWorkspacePath();
   if (workspacePath) {
-    cleanupOldReports(workspacePath);
+    const config = vscode.workspace.getConfiguration('repoguardian');
+    const retentionDays = config.get('reportRetentionDays', 7);
+    cleanupOldReports(workspacePath, retentionDays);
   }
 }
 
@@ -120,6 +127,10 @@ async function runSecurityScan() {
   diagnosticCollection.clear();
 
   try {
+    const config = vscode.workspace.getConfiguration('repoguardian');
+    const maxFileSize = config.get('maxFileSize', 1048576);
+    const ignorePaths = config.get<string[]>('ignorePaths', []);
+    
     const report = await vscode.window.withProgress(
       {
         location: vscode.ProgressLocation.Notification,
@@ -127,7 +138,11 @@ async function runSecurityScan() {
         cancellable: false
       },
       async () => {
-        return scanWorkspace({ workspacePath });
+        return scanWorkspace({ 
+          workspacePath,
+          maxFileSize,
+          ignorePaths
+        });
       }
     );
 
@@ -138,16 +153,31 @@ async function runSecurityScan() {
     displayDetections(report.detections);
 
     // Update status bar
+    const config = vscode.workspace.getConfiguration('repoguardian');
+    const enableNotifications = config.get('enableNotifications', true);
+    
     if (report.detectionsFound === 0) {
       updateStatusBar('clean');
-      vscode.window.showInformationMessage(
-        `✅ RepoGuardian: No security issues detected (${report.filesScanned} files scanned)`
-      );
+      if (enableNotifications) {
+        vscode.window.showInformationMessage(
+          `✅ RepoGuardian: Clean - No issues in ${report.filesScanned} files`
+        );
+      }
     } else {
       updateStatusBar('issues');
-      vscode.window.showWarningMessage(
-        `⚠️ RepoGuardian: Found ${report.detectionsFound} issue(s) in ${report.filesScanned} files`
-      );
+      if (enableNotifications) {
+        const action = await vscode.window.showWarningMessage(
+          `⚠️ RepoGuardian: ${report.detectionsFound} issue(s) found`,
+          'View Report',
+          'Open Problems'
+        );
+        
+        if (action === 'View Report') {
+          showLastReport();
+        } else if (action === 'Open Problems') {
+          vscode.commands.executeCommand('workbench.actions.view.problems');
+        }
+      }
     }
   } catch (error) {
     updateStatusBar('idle');

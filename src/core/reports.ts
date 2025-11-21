@@ -4,7 +4,7 @@ import { ScanReport } from './scanner';
 
 const REPORTS_DIR = '.repo-guardian';
 const REPORTS_SUBDIR = 'reports';
-const MAX_AGE_DAYS = 7;
+const DEFAULT_MAX_AGE_DAYS = 7;
 
 /**
  * Get the reports directory path
@@ -101,9 +101,9 @@ export function loadLatestReport(workspacePath: string): ScanReport | null {
 }
 
 /**
- * Delete reports older than MAX_AGE_DAYS
+ * Delete reports older than specified days
  */
-export function cleanupOldReports(workspacePath: string): number {
+export function cleanupOldReports(workspacePath: string, maxAgeDays?: number): number {
   const reportsDir = getReportsDir(workspacePath);
   
   try {
@@ -112,7 +112,8 @@ export function cleanupOldReports(workspacePath: string): number {
     }
     
     const now = Date.now();
-    const maxAge = MAX_AGE_DAYS * 24 * 60 * 60 * 1000; // Convert days to milliseconds
+    const ageDays = maxAgeDays || DEFAULT_MAX_AGE_DAYS;
+    const maxAge = ageDays * 24 * 60 * 60 * 1000; // Convert days to milliseconds
     const files = fs.readdirSync(reportsDir);
     let deletedCount = 0;
     
