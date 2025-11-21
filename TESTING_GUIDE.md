@@ -19,8 +19,8 @@ const awsSecret = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY";
 // GitHub token
 const githubToken = "ghp_1234567890abcdefghijklmnopqrstuvwxyz";
 
-// API key
-const apiKey = "sk_test_4eC39HqLyjWDarjtT1zdp7dc";
+// API key (example only - not real)
+const apiKey = "sk_test_XXXXXXXXXXXXXXXXXXXXXXXX";
 ```
 
 ## Test Steps
