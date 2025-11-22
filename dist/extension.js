@@ -47,6 +47,15 @@ let currentReport = null;
 let scanSummaryPanel;
 function activate(context) {
     console.log('RepoGuardian X is now active');
+    // Show welcome message
+    vscode.window.showInformationMessage('🔒 RepoGuardian X activated! Never leak a secret again.', 'Run Scan', 'Install Hook').then(selection => {
+        if (selection === 'Run Scan') {
+            vscode.commands.executeCommand('repoguardian.scan');
+        }
+        else if (selection === 'Install Hook') {
+            vscode.commands.executeCommand('repoguardian.installHook');
+        }
+    });
     // Create diagnostic collection for the Problems panel
     diagnosticCollection = vscode.languages.createDiagnosticCollection('repoguardian');
     context.subscriptions.push(diagnosticCollection);

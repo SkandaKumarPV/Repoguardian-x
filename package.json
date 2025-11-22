@@ -1,8 +1,21 @@
 {
   "name": "repoguardian-x",
-  "version": "0.1.0",
-  "description": "Local-first VS Code security extension with GitLab CI automation.",
+  "displayName": "RepoGuardian X",
+  "version": "1.0.0",
+  "description": "Never leak a secret again. Local-first security scanner for VS Code with automatic secret masking.",
+  "publisher": "zoro-isin-aws-2",
+  "icon": "images/logo.png",
   "main": "dist/extension.js",
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.com/zoro.isin.aws.2-group/repoguardian-x.git"
+  },
+  "homepage": "https://gitlab.com/zoro.isin.aws.2-group/repoguardian-x",
+  "bugs": {
+    "url": "https://gitlab.com/zoro.isin.aws.2-group/repoguardian-x/-/issues"
+  },
+  "categories": ["Linters", "Other"],
+  "keywords": ["security", "secrets", "git", "scanner", "credentials"],
   "bin": {
     "repoguardian": "dist/cli.js"
   },
@@ -30,23 +43,23 @@
     "commands": [
       {
         "command": "repoguardian.scan",
-        "title": "RepoGuardian: Run Security Scan"
+        "title": "RepoGuardian X: Run Security Scan"
       },
       {
         "command": "repoguardian.installHook",
-        "title": "RepoGuardian: Install Pre-Push Hook"
+        "title": "RepoGuardian X: Install Pre-Push Hook"
       },
       {
         "command": "repoguardian.showLastReport",
-        "title": "RepoGuardian: Show Last Report"
+        "title": "RepoGuardian X: Show Last Report"
       },
       {
         "command": "repoguardian.fixIssue",
-        "title": "RepoGuardian: Fix Issue with Wizard"
+        "title": "RepoGuardian X: Fix Issue with Wizard"
       },
       {
         "command": "repoguardian.openScanSummary",
-        "title": "RepoGuardian: Open Scan Summary"
+        "title": "RepoGuardian X: Open Scan Summary"
       }
     ],
     "configuration": {

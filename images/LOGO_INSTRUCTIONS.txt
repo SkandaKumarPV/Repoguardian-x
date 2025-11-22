@@ -1,0 +1,22 @@
+LOGO SETUP INSTRUCTIONS
+========================
+
+Please download the RepoGuardian X logo and save it as:
+  images/logo.png
+
+Logo URL: https://i.postimg.cc/qMzDPkjY/Repo-Guardian-X.png
+
+The logo should be:
+- PNG format
+- At least 128x128 pixels (recommended 256x256)
+- Named exactly: logo.png
+
+After adding the logo:
+1. Delete this LOGO_INSTRUCTIONS.txt file
+2. Rebuild the extension: npm run build
+3. Package: vsce package
+
+The logo will appear in:
+- VS Code Extensions marketplace view
+- Extension details page
+- README.md header
