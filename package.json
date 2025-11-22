@@ -10,7 +10,7 @@
     "compile": "tsc",
     "build": "tsc",
     "lint": "echo \"(TODO) add eslint\" && exit 0",
-    "test": "npm run build && node dist/test/masking.test.js && node dist/test/integration.test.js && node dist/test/e2e.test.js",
+    "test": "npm run build && node dist/test/masking.test.js",
     "test:masking": "npm run build && node dist/test/masking.test.js",
     "test:integration": "npm run build && node dist/test/integration.test.js",
     "test:e2e": "npm run build && node dist/test/e2e.test.js"
