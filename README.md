@@ -6,6 +6,8 @@
 
 A fully offline security scanning VS Code extension that detects secrets, credentials, and policy violations before they reach your repository. All processing happens locally with automatic secret masking to ensure sensitive data never leaves your machine.
 
+**Developed by:** Skanda Kumar PV, Prajan K, Sanjay SG
+
 [![Pipeline Status](https://gitlab.com/zoro.isin.aws.2-group/repoguardian-x/badges/main/pipeline.svg)](https://gitlab.com/zoro.isin.aws.2-group/repoguardian-x/-/pipelines)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
