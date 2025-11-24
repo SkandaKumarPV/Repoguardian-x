@@ -11,3 +11,9 @@ tsconfig.json
 .repo-guardian
 demo
 scripts/install-hooks.sh
+DEMO_GUIDE.md
+EXTENSION_BUILD.md
+SUBMISSION_SUMMARY.md
+PROJECT_REPORT.md
+images/LOGO_INSTRUCTIONS.txt
+images/WhatsApp*.jpg

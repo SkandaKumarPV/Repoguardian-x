@@ -1,7 +1,7 @@
 {
   "name": "repoguardian-x",
   "displayName": "RepoGuardian X",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Never leak a secret again. Local-first security scanner for VS Code with automatic secret masking.",
   "publisher": "zoro-isin-aws-2",
   "icon": "images/logo.png",
