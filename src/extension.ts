@@ -345,17 +345,18 @@ async function installPrePushHook() {
     // Ensure hooks directory exists
     fs.mkdirSync(gitHooksPath, { recursive: true });
 
-    // Determine which hook to use based on platform
-    const isWindows = process.platform === 'win32';
-    const hookSource = path.join(__dirname, 'hook', isWindows ? 'pre-push.cmd' : 'pre-push.sh');
+    // Use bash script for all platforms (Git Bash is used on Windows)
+    const hookSource = path.join(__dirname, 'hook', 'pre-push.sh');
     const hookDest = path.join(gitHooksPath, 'pre-push');
 
     // Copy hook file
     fs.copyFileSync(hookSource, hookDest);
 
-    // Make executable on Unix
-    if (!isWindows) {
+    // Make executable (Git on Windows respects this too)
+    try {
       fs.chmodSync(hookDest, '755');
+    } catch (chmodError) {
+      // Ignore chmod errors on Windows
     }
 
     vscode.window.showInformationMessage('✅ Pre-push hook installed successfully');
