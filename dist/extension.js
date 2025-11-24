@@ -46,7 +46,6 @@ let statusBarItem;
 let currentReport = null;
 let scanSummaryPanel;
 function activate(context) {
-    console.log('RepoGuardian X is now active');
     // Show welcome message
     vscode.window.showInformationMessage('🔒 RepoGuardian X activated! Never leak a secret again.', 'Run Scan', 'Install Hook').then(selection => {
         if (selection === 'Run Scan') {

@@ -11,8 +11,6 @@ let currentReport: ScanReport | null = null;
 let scanSummaryPanel: vscode.WebviewPanel | undefined;
 
 export function activate(context: vscode.ExtensionContext) {
-  console.log('RepoGuardian X is now active');
-  
   // Show welcome message
   vscode.window.showInformationMessage(
     '🔒 RepoGuardian X activated! Never leak a secret again.',
