@@ -1,7 +1,6 @@
 node_modules/
 dist/
 .repo-guardian/
-*.vsix
 .test-temp/
 .test-config/
 *.log
