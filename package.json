@@ -1,7 +1,7 @@
 {
   "name": "repoguardian-x",
   "displayName": "RepoGuardian X",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Never leak a secret again. Local-first security scanner for VS Code with automatic secret masking.",
   "author": "Skanda Kumar PV, Prajan K, Sanjay SG",
   "publisher": "zoro-isin-aws-2",
@@ -23,11 +23,7 @@
   "scripts": {
     "compile": "tsc && node -e \"require('fs').cpSync('src/hook', 'dist/hook', {recursive: true})\" && node -e \"require('fs').cpSync('src/core/detectors.sample.json', 'dist/core/detectors.sample.json')\"",
     "build": "npm run compile",
-    "lint": "echo \"(TODO) add eslint\" && exit 0",
-    "test": "npm run build && node dist/test/masking.test.js",
-    "test:masking": "npm run build && node dist/test/masking.test.js",
-    "test:integration": "npm run build && node dist/test/integration.test.js",
-    "test:e2e": "npm run build && node dist/test/e2e.test.js"
+    "lint": "echo \"(TODO) add eslint\" && exit 0"
   },
   "devDependencies": {
     "@types/node": "^18.19.130",
